@@ -1,0 +1,12 @@
+
+sdl_loc = /c/lib/SDL-1.2.15
+
+libs = -L$(sdl_loc)/lib/ -lmingw32 -lSDLmain -lSDL
+# -mwindows 
+
+inclds = -I$(sdl_loc)/include
+
+srcs =  main.c math/mat4.c math/vec4.c math/proj.c
+
+raster:
+	gcc $(inclds) $(srcs) -Wall -o raster.exe -m32 $(libs)
