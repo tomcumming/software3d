@@ -3,10 +3,10 @@
 struct mat4 mat4_identity() 
 {
 	struct mat4 m;
-	m.a = vec4_identity();
-	m.b = vec4_identity();
-	m.c = vec4_identity();
-	m.d = vec4_identity();
+	m.a = vec4_zero();
+	m.b = vec4_zero();
+	m.c = vec4_zero();
+	m.d = vec4_zero();
 
 	m.a.x = 1;
 	m.b.y = 1;
