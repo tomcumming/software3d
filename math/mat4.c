@@ -1,49 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "math3d.h"
-
-struct vec4 vec4_identity() 
-{
-	struct vec4 v;
-	v.x = 0;
-	v.y = 0;
-	v.z = 0;
-	v.w = 0;
-	return v;
-}
-
-struct vec4 vec4_add(struct vec4 v, struct vec4 u) 
-{
-	struct vec4 t;
-	t.x = v.x + u.x;
-	t.y = v.y + u.y;
-	t.z = v.z + u.z;
-	t.w = v.w + u.w;
-	return t;
-}
-
-struct vec4 vec4_mul(struct vec4 v, struct vec4 u) 
-{
-	struct vec4 t;
-	t.x = v.x * u.x;
-	t.y = v.y * u.y;
-	t.z = v.z * u.z;
-	t.w = v.w * u.w;
-	return t;
-}
-
-struct vec4 vec4_muls(scalar s, struct vec4 v) 
-{
-	struct vec4 t;
-	t.x = s * v.x;
-	t.y = s * v.y;
-	t.z = s * v.z;
-	t.w = s * v.w;
-	return t;
-}
-
+#include "mat4.h"
 
 struct mat4 mat4_identity() 
 {
@@ -93,15 +48,3 @@ struct vec4 mat4_mulv(struct mat4 m, struct vec4 v)
 	return u;	
 }
 
-void vec4_debug_print(struct vec4 v) 
-{
-	printf("%f %f %f %f\n", v.x, v.y, v.z, v.w);
-}
-
-void mat4_debug_print(struct mat4 m) 
-{
-	vec4_debug_print(m.a);
-	vec4_debug_print(m.b);
-	vec4_debug_print(m.c);
-	vec4_debug_print(m.d);
-}
