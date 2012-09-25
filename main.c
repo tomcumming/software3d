@@ -61,6 +61,8 @@ int main(int argc, char **argv)
 	SDL_Surface *screen;
 	SDL_Event event;
 	struct vec4 cubeCenter, cube[8];
+	scalar rota;
+	struct mat4 rot;
 	int i;
 
 	SDL_Init( SDL_INIT_EVERYTHING ); 
@@ -73,17 +75,19 @@ int main(int argc, char **argv)
 
 	while(1) 
 	{
-		cubeCenter.z = 5 + sin((scalar) SDL_GetTicks() / 1000.0);
+		rota = (scalar) SDL_GetTicks() / 1000.0;
+		cubeCenter.z = 5 + sin(rota);
+		rot = mat4_aangle(_vec4(0, 1, 0, 1), rota);
 
-		cube[0] = vec4_add(cubeCenter, _vec4( 1, -1, 1, 0));
-		cube[1] = vec4_add(cubeCenter, _vec4(-1, -1, 1, 0));
-		cube[2] = vec4_add(cubeCenter, _vec4(-1,  1, 1, 0));
-		cube[3] = vec4_add(cubeCenter, _vec4( 1,  1, 1, 0));
+		cube[0] = vec4_add(mat4_mulv(rot, _vec4( 1, -1, 1, 0)), cubeCenter);
+		cube[1] = vec4_add(mat4_mulv(rot, _vec4(-1, -1, 1, 0)), cubeCenter);
+		cube[2] = vec4_add(mat4_mulv(rot, _vec4(-1,  1, 1, 0)), cubeCenter);
+		cube[3] = vec4_add(mat4_mulv(rot, _vec4( 1,  1, 1, 0)), cubeCenter);
 
-		cube[4] = vec4_add(cubeCenter, _vec4( 1, -1, -1, 0));
-		cube[5] = vec4_add(cubeCenter, _vec4(-1, -1, -1, 0));
-		cube[6] = vec4_add(cubeCenter, _vec4(-1,  1, -1, 0));
-		cube[7] = vec4_add(cubeCenter, _vec4( 1,  1, -1, 0));
+		cube[4] = vec4_add(mat4_mulv(rot, _vec4( 1, -1, -1, 0)), cubeCenter);
+		cube[5] = vec4_add(mat4_mulv(rot, _vec4(-1, -1, -1, 0)), cubeCenter);
+		cube[6] = vec4_add(mat4_mulv(rot, _vec4(-1,  1, -1, 0)), cubeCenter);
+		cube[7] = vec4_add(mat4_mulv(rot, _vec4( 1,  1, -1, 0)), cubeCenter);
 
 		SDL_FillRect(screen, 0, 0);
 

@@ -1,3 +1,4 @@
+#include <math.h>
 #include "mat4.h"
 
 struct mat4 mat4_identity() 
@@ -48,3 +49,26 @@ struct vec4 mat4_mulv(struct mat4 m, struct vec4 v)
 	return u;	
 }
 
+// Get the rotation matrix representation a rotation 'r' around axis 'v'
+// make sure 'v' is a unit vector
+struct mat4 mat4_aangle(struct vec4 v, scalar r)
+{
+	struct mat4 m;
+	scalar c, s, C;
+
+	c = cos(r);
+	s = sin(r);
+	C = 1 - c;
+	m = mat4_identity();
+
+	m.a.x = v.x * v.x * C + c;
+	m.a.y = v.y * v.x * C + v.z * s;
+	m.a.z = v.z * v.x * C - v.y * s;
+	m.b.x = v.x * v.y * C - v.z * s;
+	m.b.y = v.y * v.y * C + c;
+	m.b.z = v.z * v.y * C + v.x * s;
+	m.c.x = v.x * v.z * C + v.y * s;
+	m.c.y = v.y * v.z * C - v.x * s;
+	m.c.z = v.z * v.z * C + c;
+	return m;
+}
