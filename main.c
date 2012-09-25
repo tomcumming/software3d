@@ -40,20 +40,53 @@ inline void setPxl(
 	pxl[i] = c;
 }
 
-void drawPoint(SDL_Surface *buf, struct vec4 v) 
+struct vec4 unproject(struct vec4 p) 
 {
-	struct vec4 f, n, vw;
+	return proj_view(proj_normalize(mat4_mulv(proj, p)), width, height);
+}
 
-	f = mat4_mulv(proj, v);
-	n = proj_normalize(f);
-	vw = proj_view(n, width, height);
+void drawLine2d(
+	SDL_Surface *buf, 
+	scalar x1, scalar y1,
+	scalar x2, scalar y2)
+{
+	scalar dx, dy, x, y;
 
-	if(vw.x < 0 || vw.x >= width || vw.y < 0 || vw.y >= height) 
+	if(x1 > x2)
+		return drawLine2d(buf, x2, y2, x1, y1);
+
+	dx = x2 - x1;
+	dy = y2 - y1;
+
+	for(x = x1; x <= x2; x++)
 	{
-		return; // Clipped
+		y = y1 + dy * (x - x1) / dx;
+		setPxl(buf, (int) x, (int) y, 0xffffffff);
 	}
-	
-	setPxl(buf, (int) vw.x, (int) vw.y, 0xffffffff);
+
+	if(y1 > y2) 
+	{
+		x = x2;
+		y = y2;
+		x2 = x1;
+		y2 = y1;
+		x1 = x;
+		y1 = y;
+	}
+
+	for(y = y1; y <= y2; y++)
+	{
+		x = x1 + dx * (y - y1) / dy;
+		setPxl(buf, (int) x, (int) y, 0xffffffff);
+	}
+}
+
+void drawLine3d(SDL_Surface *buf, struct vec4 a, struct vec4 b)
+{
+	struct vec4 ua, ub;
+	ua = unproject(a);	
+	ub = unproject(b);
+	drawLine2d(buf, ua.x, ua.y, ub.x, ub.y);
 }
 
 int main(int argc, char **argv) 
@@ -91,8 +124,20 @@ int main(int argc, char **argv)
 
 		SDL_FillRect(screen, 0, 0);
 
-		for(i = 0; i < 8; i++) 
-			drawPoint(screen, cube[i]);
+		drawLine3d(screen, cube[0], cube[1]);
+		drawLine3d(screen, cube[0], cube[3]);
+		drawLine3d(screen, cube[1], cube[2]);
+		drawLine3d(screen, cube[2], cube[3]);
+
+		drawLine3d(screen, cube[4], cube[5]);
+		drawLine3d(screen, cube[4], cube[7]);
+		drawLine3d(screen, cube[5], cube[6]);
+		drawLine3d(screen, cube[6], cube[7]);
+
+		drawLine3d(screen, cube[0], cube[4]);
+		drawLine3d(screen, cube[1], cube[5]);
+		drawLine3d(screen, cube[2], cube[6]);
+		drawLine3d(screen, cube[3], cube[7]);
 
 		SDL_Flip(screen);
 
