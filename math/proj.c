@@ -1,4 +1,7 @@
+#include "math.h"
 #include "proj.h"
+
+#define PI 3.14159265
 
 // Set a perspective frustum
 struct mat4 proj_frustum(
@@ -17,6 +20,19 @@ struct mat4 proj_frustum(
 	m.d.z = -1;
 	m.d.w = 0;
 	return m;
+}
+
+// 
+struct mat4 proj_perspective(
+	scalar fov, // FOV
+	scalar aspect, // Aspect (width / height)
+	scalar n, scalar f) // Near, Far
+{
+	scalar h, w;
+
+	h = tan(fov / 360 * PI) * n;
+	w = h * aspect;
+	return proj_frustum(-w, w, -h, h, n, f);
 }
 
 // Normalize device Coords

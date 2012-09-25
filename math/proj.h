@@ -13,6 +13,12 @@ struct mat4 proj_frustum(
 	scalar, scalar, // Bottom, Top
 	scalar, scalar); // Near, Far
 
+// Set up a perspective projection matrix
+struct mat4 proj_perspective(
+	scalar, // FOV
+	scalar, // Aspect (width / height)
+	scalar, scalar); // Near, Far
+
 // Normalize device Coords
 struct vec4 proj_normalize(struct vec4 v);
 
